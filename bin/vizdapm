@@ -38,6 +38,7 @@ echo -e "\tbgcolor = grey" >> "$graphviztmp"
 
 cd "$widgets"
 for widget in *; do
+	echo -n "Parsing widget $widget..."
 	while read line; do
 		echo "${line}" | grep -q '^in'
 		if [ ! "$?" -eq 0 ]; then
@@ -54,9 +55,12 @@ for widget in *; do
 		fi
 		echo -e "\t\"$source\" -> \"$widget\"" >> "$graphviztmp"
 	done < "$widget"
+	echo "OK!"
 done
 cd - >/dev/null
 
 echo "}" >> "$graphviztmp"
 
+echo -n "Generating $outpng..."
 dot -Kfdp -Tpng "$graphviztmp" -o "$outpng"
+echo "OK!"

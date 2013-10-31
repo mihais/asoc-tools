@@ -16,7 +16,7 @@
 usage()
 {
 cat << EOF
-usage: $0 <dapm-debugfs-directory> <graph-dot-file> <graph-jpg-file>
+usage: $0 <dapm-debugfs-directory> <graph-dot-file> <graph-png-file>
 EOF
 exit 1
 }
@@ -29,7 +29,7 @@ active=
 curpath=`pwd`
 dapm_debugfs="$1"
 graph_file=${curpath}"/$2"
-graph_file_jpg=${curpath}"/$3"
+graph_file_png=${curpath}"/$3"
 
 trap "{ [ -f "$graph_file" ] && rm -f "$graph_file"; exit; }" SIGINT SIGTERM
 
@@ -62,4 +62,4 @@ done
 popd >/dev/null
 
 echo "}" >> "$graph_file"
-dot -Kfdp -Tjpg "$graph_file" -o "$graph_file_jpg"
+dot -Kfdp -Tpng "$graph_file" -o "$graph_file_png"

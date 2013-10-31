@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Copyright 2011 Wolfson Microelectronics plc
 # Author: Dimitris Papastamos <dp@opensource.wolfsonmicro.com>

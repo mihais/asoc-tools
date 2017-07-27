@@ -41,7 +41,7 @@ echo "digraph G {" > "$graphviztmp"
 echo -e "\tbgcolor = grey" >> "$graphviztmp"
 
 cd "$widgets"
-for widget in *; do
+find . -type f | while read widget; do
 	echo -n "Parsing widget $widget..."
 	while read line; do
 		echo "${line}" | grep -q '^in'
@@ -50,14 +50,15 @@ for widget in *; do
 		fi
 		source=$(echo "$line" | awk -F\" '{print $4}')
 		active=$(widget_active "$widget")
+		sink=$(basename "$widget")
 		if [ "$active" -eq 1 ]; then
 			echo -e "\t\"$source\" [color = green]" >> "$graphviztmp"
-			echo -e "\t\"$widget\" [color = green]" >> "$graphviztmp"
+			echo -e "\t\"$sink\" [color = green]" >> "$graphviztmp"
 		else
 			echo -e "\t\"$source\" [color = red]" >> "$graphviztmp"
-			echo -e "\t\"$widget\" [color = red]" >> "$graphviztmp"
+			echo -e "\t\"$sink\" [color = red]" >> "$graphviztmp"
 		fi
-		echo -e "\t\"$source\" -> \"$widget\"" >> "$graphviztmp"
+		echo -e "\t\"$source\" -> \"$sink\"" >> "$graphviztmp"
 	done < "$widget"
 	echo "OK!"
 done

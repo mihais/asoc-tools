@@ -13,12 +13,16 @@
 # This program requires `graphviz' to be installed.
 
 if [ $# -ne 2 ]; then
-	echo "usage: $(basename $0) dapm-debugfs-path out-png" 1>&2
+	echo "Usage: $(basename $0) dapm-debugfs-path outfile[.png]" 1>&2
+	echo "" 1>&2
+	echo "  If the outfile ends with .png then a PNG file is created" 1>&2
+	echo "  using dot executable, otherwise the outfile will contain" 1>&2
+	echo "  the dot representation." 1>&2
 	exit 1
 fi
 
 widgets="$1"
-outpng="$2"
+outfile="$2"
 graphviztmp=$(mktemp)
 
 trap "{ rm -f $graphviztmp; exit 1; }" SIGINT SIGTERM EXIT
@@ -61,6 +65,15 @@ cd - >/dev/null
 
 echo "}" >> "$graphviztmp"
 
-echo -n "Generating $outpng..."
-dot -Kfdp -Tpng "$graphviztmp" -o "$outpng"
-echo "OK!"
+echo ""
+if [ "${outfile##*.}" = "png" ]; then
+    echo -n "Generating $outfile..."
+    dot -Kfdp -Tpng "$graphviztmp" -o "$outfile"
+    echo "OK!"
+else
+    mv "$graphviztmp" "$outfile"
+    chmod a=rw "$outfile"
+
+    echo "Generate PNG with:"
+    echo "dot -Kfdp -Tpng $outfile -o $outfile.png"
+fi
